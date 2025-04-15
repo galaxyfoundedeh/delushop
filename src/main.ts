@@ -368,7 +368,7 @@ async function handleSubmitOrder(e: Event): Promise<void> {
 async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
   try {
     // If no webhook URL is set, just log the order and return
-    if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL === "YOUR_DISCORD_WEBHOOK_URL") {
+    if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL === "https://discord.com/api/webhooks/1361712233645871334/uchjIaM9RisBJUcTbAeViOSSZR7XZ0fm__x05AY44mvxBR8w5a8rCGuf9o-eo9bouo2d") {
       console.log("Discord webhook URL not set. Order data:", orderData);
       return;
     }
