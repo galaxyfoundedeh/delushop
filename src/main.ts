@@ -34,11 +34,11 @@ interface OrderData {
 const products: Product[] = [
   {
     id: 1,
-    name: "Classic Black Sweatpants",
+    name: "Crossed red lines",
     price: 49.99,
-    image: "https://i5.walmartimages.com/seo/JWZUY-Woman-Cargo-Sweatpants-with-Pockets-Y2k-Baggy-Wide-Leg-Pants-Streetwear-Aesthetic-3-Black-Small_f05fb3a1-806b-4ef6-ba60-c8ccb5656c52.050b1b2567524db0c742139d2daabdd7.jpeg",
-    description: "Comfortable classic black sweatpants with pockets. Perfect for everyday wear.",
-    sizes: ["Small", "Medium", "Large", "XXL"]
+    image: "https://cdn.discordapp.com/attachments/1338141958933057590/1361716438515056761/IMG_20250413_185553.png?ex=67ffc4c2&is=67fe7342&hm=3cfb407776901a6be6c2ccdc83bfe24855486f346fa5db18f184057642a7d113&",
+    description: "A very comy baggy sweatpants for stylish daily usage in dark red.",
+    sizes: ["Small", "Medium", "Large"]
   },
   {
     id: 2,
