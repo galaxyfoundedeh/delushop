@@ -83,7 +83,7 @@ const products: Product[] = [
 ];
 
 // Discord webhook URL
-const DISCORD_WEBHOOK_URL = "https://dcrelay.liteeagle.me/relay/871feb1c-8efd-432e-a275-0754f52b2a3f";
+const DISCORD_WEBHOOK_URL = "d";
 
 // Shopping cart
 let cart: CartItem[] = [];
