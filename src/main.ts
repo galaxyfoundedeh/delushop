@@ -101,15 +101,8 @@ const closeModalBtn = document.getElementById('close-modal-btn');
 const orderDetailsElement = document.querySelector('.order-details');
 const deliveryForm = document.getElementById('delivery-form') as HTMLFormElement;
 
-// Set background image
+// Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
-  // Set the background image
-  document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1338141958933057590/1361717092251865331/IMG_20250413_144318_726.webp?ex=67ffc55e&is=67fe73de&hm=1687151618c8706b06fbb4137c2f1dfd18888ea73c1bfce5ce1ba1122fcad52f&')";
-  document.body.style.backgroundSize = "cover";
-  document.body.style.backgroundPosition = "center";
-  document.body.style.backgroundRepeat = "no-repeat";
-  document.body.style.backgroundAttachment = "fixed";
-  
   loadProducts();
   updateCartUI();
 
