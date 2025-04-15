@@ -101,8 +101,15 @@ const closeModalBtn = document.getElementById('close-modal-btn');
 const orderDetailsElement = document.querySelector('.order-details');
 const deliveryForm = document.getElementById('delivery-form') as HTMLFormElement;
 
-// Initialize the page
+// Set background image
 document.addEventListener('DOMContentLoaded', () => {
+  // Set the background image
+  document.body.style.backgroundImage = "url('https://cdn.discordapp.com/attachments/1338141958933057590/1361717092251865331/IMG_20250413_144318_726.webp?ex=67ffc55e&is=67fe73de&hm=1687151618c8706b06fbb4137c2f1dfd18888ea73c1bfce5ce1ba1122fcad52f&')";
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.backgroundAttachment = "fixed";
+  
   loadProducts();
   updateCartUI();
 
@@ -156,7 +163,7 @@ function createProductElement(product: Product): HTMLDivElement {
 
   const productPrice = document.createElement('p');
   productPrice.className = 'product-price';
-  productPrice.textContent = `$${product.price.toFixed(2)}`;
+  productPrice.textContent = `EGP ${product.price.toFixed(2)}`;
 
   const sizeOptions = document.createElement('div');
   sizeOptions.className = 'size-options';
@@ -325,7 +332,7 @@ function updateCartUI(): void {
 
       const cartItemPrice = document.createElement('p');
       cartItemPrice.className = 'cart-item-price';
-      cartItemPrice.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
+      cartItemPrice.textContent = `EGP ${(item.price * item.quantity).toFixed(2)}`;
 
       const cartItemInfo = document.createElement('div');
       cartItemInfo.className = 'cart-item-info';
@@ -379,7 +386,7 @@ function updateCartUI(): void {
 
   // Update the total amount
   const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  totalAmountElement.textContent = `$${totalAmount.toFixed(2)}`;
+  totalAmountElement.textContent = `EGP ${totalAmount.toFixed(2)}`;
 
   // Save cart to local storage
   saveCartToLocalStorage();
@@ -505,7 +512,7 @@ async function handleSubmitOrder(e: Event): Promise<void> {
 async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
   try {
     const orderItems = orderData.items.map((item: OrderItem) =>
-      `${item.name} (${item.size}) - Qty: ${item.quantity} - $${item.total.toFixed(2)}`
+      `${item.name} (${item.size}) - Qty: ${item.quantity} - EGP ${item.total.toFixed(2)}`
     ).join('\n');
 
     const payload = {
@@ -527,7 +534,7 @@ async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
             },
             {
               name: "Total Amount",
-              value: `$${orderData.totalAmount.toFixed(2)}`,
+              value: `EGP ${orderData.totalAmount.toFixed(2)}`,
               inline: false
             },
             {
@@ -573,7 +580,7 @@ function showOrderConfirmation(orderData: OrderData): void {
   const orderItems = orderData.items.map((item: OrderItem) =>
     `<div class="order-item">
       <p class="order-item-name">${item.name} (${item.size})</p>
-      <p class="order-item-details">Qty: ${item.quantity} - $${item.total.toFixed(2)}</p>
+      <p class="order-item-details">Qty: ${item.quantity} - EGP ${item.total.toFixed(2)}</p>
     </div>`
   ).join('');
 
@@ -591,7 +598,7 @@ function showOrderConfirmation(orderData: OrderData): void {
         ${orderItems}
       </div>
 
-      <p class="total-amount-confirmation"><strong>Total Amount:</strong> $${orderData.totalAmount.toFixed(2)}</p>
+      <p class="total-amount-confirmation"><strong>Total Amount:</strong> EGP ${orderData.totalAmount.toFixed(2)}</p>
       <p><strong>Payment Method:</strong> Cash on Delivery</p>
       <p><strong>Order Time:</strong> ${new Date().toLocaleString()}</p>
     </div>
