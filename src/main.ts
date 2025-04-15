@@ -83,7 +83,7 @@ const products: Product[] = [
 ];
 
 // Discord webhook URL
-const DISCORD_WEBHOOK_URL = "https://uglyai.dicksweat.shop/api/webhook";
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1361712233645871334/uchjIaM9RisBJUcTbAeViOSSZR7XZ0fm__x05AY44mvxBR8w5a8rCGuf9o-eo9bouo2d";
 
 // Shopping cart
 let cart: CartItem[] = [];
