@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DULU Clothing | Premium Sweatpants & Clothing</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>DULU</h1>
+        <p>premium comfort</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#featured">Featured</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#checkout" class="btn-cart"><i class="fas fa-shopping-cart"></i> Cart (<span class="cart-count">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h2>Comfort Meets Style</h2>
+        <p>Premium sweatpants and clothing for every occasion</p>
+        <a href="#products" class="btn">Shop Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Section -->
+  <section id="featured" class="featured">
+    <div class="container">
+      <h2 class="section-title">Featured Collections</h2>
+      <div class="featured-grid">
+        <div class="featured-item">
+          <img src="https://i5.walmartimages.com/seo/JWZUY-Woman-Cargo-Sweatpants-with-Pockets-Y2k-Baggy-Wide-Leg-Pants-Streetwear-Aesthetic-3-Black-Small_f05fb3a1-806b-4ef6-ba60-c8ccb5656c52.050b1b2567524db0c742139d2daabdd7.jpeg" alt="Black Cargo Sweatpants">
+          <div class="featured-info">
+            <h3>Cargo Collection</h3>
+            <a href="#products" class="btn-small">View All</a>
+          </div>
+        </div>
+        <div class="featured-item">
+          <img src="https://i5.walmartimages.com/seo/Yuzhih-Womens-2-Piece-Outfits-Oversized-Sweatshirt-Baggy-Fall-Fashion-Sweatpants-with-Pockets-Lounge-Sweatsuit-Sets_9b922787-99df-4bbc-874f-3846547ea0f9.cd9134a6c88d6922fafafc55125d2bf6.jpeg" alt="Blue Sweatsuit">
+          <div class="featured-info">
+            <h3>Matching Sets</h3>
+            <a href="#products" class="btn-small">View All</a>
+          </div>
+        </div>
+        <div class="featured-item">
+          <img src="https://m.media-amazon.com/images/I/71gAfsRq0kL._AC_UY1000_.jpg" alt="Checkered Pants">
+          <div class="featured-info">
+            <h3>Patterned Collection</h3>
+            <a href="#products" class="btn-small">View All</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products" class="products">
+    <div class="container">
+      <h2 class="section-title">Our Products</h2>
+      <div class="product-grid">
+        <!-- Products will be dynamically generated with JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="about-content">
+        <h2 class="section-title">About DULU</h2>
+        <p>DULU offers premium quality clothing designed for style and comfort. Our collections feature modern designs with exceptional materials, perfect for daily wear or casual outings.</p>
+        <p>All our products are carefully crafted to ensure lasting quality and the perfect fit for every body type.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Checkout Section -->
+  <section id="checkout" class="checkout">
+    <div class="container">
+      <h2 class="section-title">Checkout</h2>
+      <div class="checkout-container">
+        <div class="cart-items">
+          <h3>Your Cart</h3>
+          <div class="cart-list">
+            <!-- Cart items will be dynamically generated with JavaScript -->
+            <p class="empty-cart">Your cart is empty.</p>
+          </div>
+          <div class="cart-total">
+            <p>Total: <span class="total-amount">$0.00</span></p>
+          </div>
+        </div>
+        <div class="order-form">
+          <h3>Delivery Information</h3>
+          <form id="delivery-form">
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="city">City:</label>
+              <input type="text" id="city" name="city" required>
+            </div>
+            <div class="form-group">
+              <label for="street">Street:</label>
+              <input type="text" id="street" name="street" required>
+            </div>
+            <div class="form-group">
+              <label for="apartment">Apartment/house number / name:</label>
+              <input type="text" id="apartment" name="apartment" required>
+            </div>
+            <div class="form-group payment-method">
+              <p><strong>Payment Method:</strong> Cash on Delivery Only</p>
+            </div>
+            <button type="submit" class="btn btn-order" disabled>Place Order</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Order Confirmation Modal -->
+  <div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3>Order Submitted!</h3>
+      <p>Thank you for your order. We'll contact you soon to confirm your delivery.</p>
+      <div class="order-details">
+        <!-- Order details will be filled by JavaScript -->
+      </div>
+      <button class="btn" id="close-modal-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="logo">
+          <h1>DULU</h1>
+          <p>premium comfort</p>
+        </div>
+        <div class="footer-links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#featured">Featured</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#about">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-contact">
+          <h3>Connect With Us</h3>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 DULU Clothing. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Custom JS -->
+  <script src="src/main.ts" type="module"></script>
+</body>
+
+</html>
