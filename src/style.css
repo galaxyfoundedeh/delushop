@@ -166,7 +166,7 @@ nav a:hover::after {
 /* Hero Section */
 .hero {
   height: 80vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://cdn.discordapp.com/attachments/1338141958933057590/1361716438515056761/IMG_20250413_185553.png?ex=67ffc4c2&is=67fe7342&hm=3cfb407776901a6be6c2ccdc83bfe24855486f346fa5db18f184057642a7d113&');
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://cdn.discordapp.com/attachments/1338141958933057590/1361717092251865331/IMG_20250413_144318_726.webp?ex=67ffc55e&is=67fe73de&hm=1687151618c8706b06fbb4137c2f1dfd18888ea73c1bfce5ce1ba1122fcad52f&');
   background-size: cover;
   background-position: center;
   color: white;
