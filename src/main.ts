@@ -82,9 +82,8 @@ const products: Product[] = [
   }
 ];
 
-// Discord webhook URL - replace with your actual webhook URL
-// For demonstration purposes, leave this as empty string. In production, replace with your Discord webhook URL.
-const DISCORD_WEBHOOK_URL = "";
+// Discord webhook URL
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1361712233645871334/uchjIaM9RisBJUcTbAeViOSSZR7XZ0fm__x05AY44mvxBR8w5a8rCGuf9o-eo9bouo2d";
 
 // Shopping cart
 let cart: CartItem[] = [];
@@ -120,7 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load products into the page
 function loadProducts(): void {
-  if (!productGrid) return;
+  if (!productGrid) {
+    console.error('Product grid element not found');
+    return;
+  }
 
   for (const product of products) {
     const productElement = createProductElement(product);
@@ -137,6 +139,10 @@ function createProductElement(product: Product): HTMLDivElement {
   productImage.src = product.image;
   productImage.alt = product.name;
   productImage.className = 'product-image';
+  productImage.onerror = () => {
+    // Fallback if image fails to load
+    productImage.src = 'https://via.placeholder.com/300x300?text=Product+Image';
+  };
 
   const productInfo = document.createElement('div');
   productInfo.className = 'product-info';
@@ -155,28 +161,36 @@ function createProductElement(product: Product): HTMLDivElement {
   const sizeOptions = document.createElement('div');
   sizeOptions.className = 'size-options';
 
-  product.sizes.forEach((size, index) => {
-    const sizeOption = document.createElement('div');
-    sizeOption.className = 'size-option';
-    sizeOption.textContent = size;
-    sizeOption.dataset.size = size;
-    if (index === 0) {
-      sizeOption.classList.add('selected');
-    }
-
-    sizeOption.addEventListener('click', () => {
-      // Remove selected class from all size options
-      const options = sizeOptions.querySelectorAll('.size-option');
-      for (const option of options) {
-        option.classList.remove('selected');
+  // Size selection
+  if (product.sizes.length > 0) {
+    product.sizes.forEach((size, index) => {
+      const sizeOption = document.createElement('div');
+      sizeOption.className = 'size-option';
+      sizeOption.textContent = size;
+      sizeOption.dataset.size = size;
+      if (index === 0) {
+        sizeOption.classList.add('selected');
       }
 
-      // Add selected class to clicked size option
-      sizeOption.classList.add('selected');
-    });
+      sizeOption.addEventListener('click', () => {
+        // Remove selected class from all size options
+        const options = sizeOptions.querySelectorAll('.size-option');
+        for (const option of options) {
+          option.classList.remove('selected');
+        }
 
-    sizeOptions.appendChild(sizeOption);
-  });
+        // Add selected class to clicked size option
+        sizeOption.classList.add('selected');
+      });
+
+      sizeOptions.appendChild(sizeOption);
+    });
+  } else {
+    // Handle case where product has no sizes
+    const noSizes = document.createElement('p');
+    noSizes.textContent = 'One size fits all';
+    sizeOptions.appendChild(noSizes);
+  }
 
   const productActions = document.createElement('div');
   productActions.className = 'product-actions';
@@ -190,6 +204,11 @@ function createProductElement(product: Product): HTMLDivElement {
     if (selectedSizeElement) {
       const selectedSize = selectedSizeElement.dataset.size || '';
       addToCart(product, selectedSize);
+    } else if (product.sizes.length === 0) {
+      // If no sizes available, use "One Size" as default
+      addToCart(product, "One Size");
+    } else {
+      showNotification('Please select a size first');
     }
   });
 
@@ -235,13 +254,38 @@ function addToCart(product: Product, selectedSize: string): void {
 
 // Remove an item from the cart
 function removeFromCart(index: number): void {
+  if (index < 0 || index >= cart.length) {
+    console.error('Invalid cart index:', index);
+    return;
+  }
+
   cart.splice(index, 1);
+  updateCartUI();
+  showNotification('Item removed from cart');
+}
+
+// Update quantity of an item in the cart
+function updateQuantity(index: number, newQuantity: number): void {
+  if (index < 0 || index >= cart.length) {
+    console.error('Invalid cart index:', index);
+    return;
+  }
+
+  if (newQuantity <= 0) {
+    removeFromCart(index);
+    return;
+  }
+
+  cart[index].quantity = newQuantity;
   updateCartUI();
 }
 
 // Update the cart UI
 function updateCartUI(): void {
-  if (!cartCountElement || !cartListElement || !emptyCartMessage || !totalAmountElement || !orderButton) return;
+  if (!cartCountElement || !cartListElement || !emptyCartMessage || !totalAmountElement || !orderButton) {
+    console.error('One or more cart UI elements not found');
+    return;
+  }
 
   // Update the cart count
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -268,6 +312,9 @@ function updateCartUI(): void {
       cartItemImage.src = item.image;
       cartItemImage.alt = item.name;
       cartItemImage.className = 'cart-item-image';
+      cartItemImage.onerror = () => {
+        cartItemImage.src = 'https://via.placeholder.com/100x100?text=Product';
+      };
 
       const cartItemDetails = document.createElement('div');
       cartItemDetails.className = 'cart-item-details';
@@ -280,9 +327,36 @@ function updateCartUI(): void {
       cartItemPrice.className = 'cart-item-price';
       cartItemPrice.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
 
-      const cartItemSize = document.createElement('p');
+      const cartItemInfo = document.createElement('div');
+      cartItemInfo.className = 'cart-item-info';
+
+      const cartItemSize = document.createElement('span');
       cartItemSize.className = 'cart-item-size';
-      cartItemSize.textContent = `Size: ${item.selectedSize} | Quantity: ${item.quantity}`;
+      cartItemSize.textContent = `Size: ${item.selectedSize}`;
+
+      const quantityControls = document.createElement('div');
+      quantityControls.className = 'quantity-controls';
+
+      const decreaseBtn = document.createElement('button');
+      decreaseBtn.className = 'quantity-btn';
+      decreaseBtn.textContent = '-';
+      decreaseBtn.addEventListener('click', () => updateQuantity(index, item.quantity - 1));
+
+      const quantityDisplay = document.createElement('span');
+      quantityDisplay.className = 'quantity-display';
+      quantityDisplay.textContent = item.quantity.toString();
+
+      const increaseBtn = document.createElement('button');
+      increaseBtn.className = 'quantity-btn';
+      increaseBtn.textContent = '+';
+      increaseBtn.addEventListener('click', () => updateQuantity(index, item.quantity + 1));
+
+      quantityControls.appendChild(decreaseBtn);
+      quantityControls.appendChild(quantityDisplay);
+      quantityControls.appendChild(increaseBtn);
+
+      cartItemInfo.appendChild(cartItemSize);
+      cartItemInfo.appendChild(quantityControls);
 
       const cartItemRemove = document.createElement('span');
       cartItemRemove.className = 'cart-item-remove';
@@ -293,7 +367,7 @@ function updateCartUI(): void {
 
       cartItemDetails.appendChild(cartItemTitle);
       cartItemDetails.appendChild(cartItemPrice);
-      cartItemDetails.appendChild(cartItemSize);
+      cartItemDetails.appendChild(cartItemInfo);
 
       cartItem.appendChild(cartItemImage);
       cartItem.appendChild(cartItemDetails);
@@ -306,6 +380,31 @@ function updateCartUI(): void {
   // Update the total amount
   const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   totalAmountElement.textContent = `$${totalAmount.toFixed(2)}`;
+
+  // Save cart to local storage
+  saveCartToLocalStorage();
+}
+
+// Save cart to local storage
+function saveCartToLocalStorage(): void {
+  try {
+    localStorage.setItem('shoppingCart', JSON.stringify(cart));
+  } catch (error) {
+    console.error('Error saving cart to local storage:', error);
+  }
+}
+
+// Load cart from local storage
+function loadCartFromLocalStorage(): void {
+  try {
+    const savedCart = localStorage.getItem('shoppingCart');
+    if (savedCart) {
+      cart = JSON.parse(savedCart);
+      updateCartUI();
+    }
+  } catch (error) {
+    console.error('Error loading cart from local storage:', error);
+  }
 }
 
 // Show a notification
@@ -328,13 +427,45 @@ function showNotification(message: string): void {
   }, 3000);
 }
 
+// Validate form data
+function validateForm(formData: FormData): string | null {
+  const name = formData.get('name') as string;
+  const city = formData.get('city') as string;
+  const street = formData.get('street') as string;
+
+  if (!name || name.trim().length < 2) {
+    return 'Please enter a valid name (minimum 2 characters)';
+  }
+
+  if (!city || city.trim().length < 2) {
+    return 'Please enter a valid city name';
+  }
+
+  if (!street || street.trim().length < 5) {
+    return 'Please enter a valid street address';
+  }
+
+  return null; // Form is valid
+}
+
 // Handle form submission
 async function handleSubmitOrder(e: Event): Promise<void> {
   e.preventDefault();
 
-  if (cart.length === 0) return;
+  if (cart.length === 0) {
+    showNotification('Your cart is empty');
+    return;
+  }
 
   const formData = new FormData(deliveryForm);
+  
+  // Validate form
+  const validationError = validateForm(formData);
+  if (validationError) {
+    showNotification(validationError);
+    return;
+  }
+
   const orderData: OrderData = {
     name: formData.get('name') as string,
     city: formData.get('city') as string,
@@ -350,29 +481,29 @@ async function handleSubmitOrder(e: Event): Promise<void> {
     totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0)
   };
 
-  // Send the order to Discord
-  await sendOrderToDiscord(orderData);
+  try {
+    // Send the order to Discord
+    await sendOrderToDiscord(orderData);
 
-  // Show the order confirmation
-  showOrderConfirmation(orderData);
+    // Show the order confirmation
+    showOrderConfirmation(orderData);
 
-  // Clear the cart
-  cart = [];
-  updateCartUI();
+    // Clear the cart
+    cart = [];
+    localStorage.removeItem('shoppingCart');
+    updateCartUI();
 
-  // Reset the form
-  deliveryForm.reset();
+    // Reset the form
+    deliveryForm.reset();
+  } catch (error) {
+    console.error('Error processing order:', error);
+    showNotification('Error processing your order. Please try again.');
+  }
 }
 
 // Send the order to Discord
 async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
   try {
-    // If no webhook URL is set, just log the order and return
-    if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL === "https://discord.com/api/webhooks/1361712233645871334/uchjIaM9RisBJUcTbAeViOSSZR7XZ0fm__x05AY44mvxBR8w5a8rCGuf9o-eo9bouo2d") {
-      console.log("Discord webhook URL not set. Order data:", orderData);
-      return;
-    }
-
     const orderItems = orderData.items.map((item: OrderItem) =>
       `${item.name} (${item.size}) - Qty: ${item.quantity} - $${item.total.toFixed(2)}`
     ).join('\n');
@@ -386,7 +517,7 @@ async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
           fields: [
             {
               name: "Customer Information",
-              value: `Name: ${orderData.name}\nCity: ${orderData.city}\nStreet: ${orderData.street}\nApartment/House: ${orderData.apartment}`,
+              value: `Name: ${orderData.name}\nCity: ${orderData.city}\nStreet: ${orderData.street}\nApartment/House: ${orderData.apartment || 'Not specified'}`,
               inline: false
             },
             {
@@ -402,6 +533,11 @@ async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
             {
               name: "Payment Method",
               value: "Cash on Delivery",
+              inline: false
+            },
+            {
+              name: "Order Time",
+              value: new Date().toLocaleString(),
               inline: false
             }
           ],
@@ -419,42 +555,46 @@ async function sendOrderToDiscord(orderData: OrderData): Promise<void> {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to send order to Discord');
+      throw new Error(`Failed to send order to Discord: ${response.status} ${response.statusText}`);
     }
   } catch (error) {
     console.error('Error sending order to Discord:', error);
-    // Fallback - you can still show the confirmation even if Discord fails
+    // We'll still show the confirmation to the user even if Discord fails
   }
 }
 
 // Show the order confirmation
 function showOrderConfirmation(orderData: OrderData): void {
-  if (!modal || !orderDetailsElement) return;
-
-  const orderItems = orderData.items.map((item: OrderItem) =>
-    `<p>${item.name} (${item.size}) - Qty: ${item.quantity} - $${item.total.toFixed(2)}</p>`
-  ).join('');
-
-  let webhookNotice = '';
-  if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL === "YOUR_DISCORD_WEBHOOK_URL") {
-    webhookNotice = `<div class="webhook-notice">
-      <p><strong>Note:</strong> Discord webhook URL is not configured. In a production environment, this order would be sent to your Discord server.</p>
-    </div>`;
+  if (!modal || !orderDetailsElement) {
+    console.error('Modal or order details element not found');
+    return;
   }
 
+  const orderItems = orderData.items.map((item: OrderItem) =>
+    `<div class="order-item">
+      <p class="order-item-name">${item.name} (${item.size})</p>
+      <p class="order-item-details">Qty: ${item.quantity} - $${item.total.toFixed(2)}</p>
+    </div>`
+  ).join('');
+
   orderDetailsElement.innerHTML = `
-    <h4>Delivery Information:</h4>
-    <p><strong>Name:</strong> ${orderData.name}</p>
-    <p><strong>City:</strong> ${orderData.city}</p>
-    <p><strong>Street:</strong> ${orderData.street}</p>
-    <p><strong>Apartment/House:</strong> ${orderData.apartment}</p>
+    <h4>Thank you for your order!</h4>
+    <div class="confirmation-details">
+      <h4>Delivery Information:</h4>
+      <p><strong>Name:</strong> ${orderData.name}</p>
+      <p><strong>City:</strong> ${orderData.city}</p>
+      <p><strong>Street:</strong> ${orderData.street}</p>
+      <p><strong>Apartment/House:</strong> ${orderData.apartment || 'Not specified'}</p>
 
-    <h4>Order Items:</h4>
-    ${orderItems}
+      <h4>Order Items:</h4>
+      <div class="order-items-list">
+        ${orderItems}
+      </div>
 
-    <p><strong>Total Amount:</strong> $${orderData.totalAmount.toFixed(2)}</p>
-    <p><strong>Payment Method:</strong> Cash on Delivery</p>
-    ${webhookNotice}
+      <p class="total-amount-confirmation"><strong>Total Amount:</strong> $${orderData.totalAmount.toFixed(2)}</p>
+      <p><strong>Payment Method:</strong> Cash on Delivery</p>
+      <p><strong>Order Time:</strong> ${new Date().toLocaleString()}</p>
+    </div>
   `;
 
   modal.classList.add('active');
@@ -465,3 +605,8 @@ function hideModal(): void {
   if (!modal) return;
   modal.classList.remove('active');
 }
+
+// Load cart from local storage on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadCartFromLocalStorage();
+});
